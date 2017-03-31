@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import store from '../store.js';
 import Lyrics from '../components/Lyrics';
+import {setLyrics, fetchLyrics} from '../action-creators/lyrics';
+import axios from 'axios';
 
 export default class LyricsContainer extends Component {
-	constructor (props) {
-		super(props);
-		this.state = Object.assign(store.getState(), {artistQuery:'', songQuery:''});
+	constructor () {
+		super();
+		this.state = Object.assign({artistQuery:'', songQuery:''}, store.getState());
 		
 		this.setArtist = this.setArtist.bind(this);
 		this.setSong = this.setSong.bind(this);
@@ -14,6 +16,10 @@ export default class LyricsContainer extends Component {
 
 	componentDidMount() {
 		this.unsubscribe = store.subscribe( () => this.setState( store.getState() ));
+	}
+
+	componentWillUnmount() {
+		this.unsubscribe();
 	}
 
 	setArtist(value) {
@@ -28,12 +34,12 @@ export default class LyricsContainer extends Component {
 		})
 	}
 
-	handleSubmit() {
-		console.log(this.state);
-	}
-
-	componentWillUnmount() {
-		this.unsubscribe();
+	handleSubmit(e) {
+		// console.log(this.state);
+		e.preventDefault();
+		if (this.state.songQuery && this.state.artistQuery) {
+			store.dispatch(fetchLyrics(this.state.artistQuery, this.state.songQuery));
+		}
 	}
 
 	render() {
