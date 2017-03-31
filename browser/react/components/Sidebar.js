@@ -39,6 +39,13 @@ const Sidebar = (props) => {
           })
         }
       </ul>
+
+      <hr />
+      <section>
+        <h4 className="menu-item">
+          <Link to='/lyrics'>LYRICS</Link>
+        </h4>
+      </section>
     </sidebar>
   );
 }
